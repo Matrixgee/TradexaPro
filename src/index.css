@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+body{
+    font-family: "Lora", serif;
+}
+
+.ant-drawer-body{
+    padding: 0 !important;
+}
+.ant-drawer-header{
+    background: #122044;
+}
+.ant-select{
+    height: 50%;
+    width: 100%;
+    background: transparent;
+}
+
+.MobileView {
+    width: 30%;
+    height: 100%;
+    display: none;
+    
+}
+.ant-drawer  .ant-drawer-close{
+    color: #FDFDF7;
+}
+
+@media screen and (max-width: 900px){
+    .MobileView{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+
+@media screen and (max-width: 500px) {
+    .MobileView{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .MobileView{
+       display: flex;
+       justify-content: center;
+       align-items: center;
+    }
+}
