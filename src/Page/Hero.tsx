@@ -1,93 +1,122 @@
-import { useEffect, useState } from 'react';
-import First from '../assets/First.webp';
-import Second from '../assets/second.webp';
-import Third from '../assets/Third.webp';
-import {Link} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Hero = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const nav = useNavigate();
 
-  const Context = [
-    {
-      id: 1,
-      image: First,
-      HeadText: 'A Philosophy Rooted In The Pursuit Of Alpha',
-      SubHeaderText: "Our clients rely on us to deliver performance alpha consistent with their specific objectives taking into account.",
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
     },
-    {
-      id: 2,
-      image: Second,
-      HeadText: "Your Future Is Created By What You Do Today",
-      SubHeaderText: "Join professional trading experts in our journey to building a profitable future."
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
     },
-    {
-      id: 3,
-      image: Third,
-      HeadText: "Professional Portfolio Management",
-      SubHeaderText: "EXPRESS TRADES PROFIT believes portfolio management is far more than just buying stocks and bonds and hoping they do well."
-    }
-  ];
-
-  const totalSlides = Context.length;
-
-
-  const splitLastWord = (text:string) => {
-    const words = text.split(' ');
-    const lastWord = words.pop(); 
-    const initialText = words.join(' '); 
-    return { initialText, lastWord };
   };
 
-  const nextSlide = () => {
-    setCurrentSlide((currentSlide + 1) % totalSlides); 
+  const buttonVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.5, delay: 0.6 },
+    },
+    hover: { scale: 1.05 },
+    tap: { scale: 0.98 },
   };
-
-  const prevSlide = () => {
-    setCurrentSlide((currentSlide - 1 + totalSlides) % totalSlides); 
-  };
-
-  useEffect(()=>{
-    const interval = setInterval(() => {
-      setCurrentSlide(currentSlide => (currentSlide + 1) % Context.length);
-    }, 8000); 
-
-    return () => clearInterval(interval); 
-  },[Context.length])
 
   return (
-    <div className='w-full h-screen flex flex-col justify-center items-center bg-gray-100'>
-      <div className='relative w-full h-full'>
-        <img src={Context[currentSlide].image} alt={Context[currentSlide].HeadText} className='w-full h-full object-cover' />
-        <div className='absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center text-white p-4 '  style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
-          <div className='W-[90%] h-[100%] flex justify-center gap-4 items-start flex-col px-7'>
-          {
-              (() => {
-                const { initialText, lastWord } = splitLastWord(Context[currentSlide].HeadText);
-                return (
-                  <h1 className='font-semibold text-5xl phone:text-3xl'>
-                    {initialText} <span style={{ color: '#fdc500' }}>{lastWord}</span>
-                  </h1>
-                );
-              })()
-            }
-          <p className='font-medium text-md text-center phone:text-[10px]'>{Context[currentSlide].SubHeaderText}</p>
-          <div className='w-[90%] h-[15%] flex justify-start items-center phone:justify-center'>
-             <button className="bg-[#003566] hover:bg-blue-500  text-white font-bold rounded w-[20%] h-[50%] phone:w-[60%] ">
-            <Link to='/reg'>Get Started</Link>
-          </button>
-          </div>
-          </div>
-          
-        </div>
-        <button onClick={prevSlide} className='absolute left-3 top-1/2 transform -translate-y-1/2 text-white p-2' style={{background: 'rgba(0, 0, 0, 0.9)'}}>
-          &#10094;
-        </button>
-        <button onClick={nextSlide} className='absolute right-3 top-1/2 transform -translate-y-1/2  text-white p-2' style={{background: 'rgba(0, 0, 0, 0.9)'}}>
-          &#10095;
-        </button>
-      </div>
+    <div className="w-full min-h-[32rem] bg-gradient-to-br from-[#0F0C29] via-[#10184b] to-[#20285d] flex justify-center items-center px-4 py-12">
+      <motion.div
+        className="w-full max-w-6xl mx-auto text-center"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.h1
+          className="text-6xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+          variants={itemVariants}
+        >
+          Maximize Your{" "}
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#919ce4] to-[#2c44dd]">
+            Investment
+          </span>{" "}
+          Potential
+        </motion.h1>
+
+        <motion.p
+          className="text-2xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10"
+          variants={itemVariants}
+          transition={{ delay: 0.2 }}
+        >
+          AI-powered investment strategies designed to grow your wealth with
+          precision and security.
+        </motion.p>
+
+        <motion.div
+          className="flex flex-row sm:flex-row justify-center gap-4"
+          variants={itemVariants}
+          transition={{ delay: 0.4 }}
+        >
+          <motion.button
+            className="px-8 py-4 rounded-lg bg-gradient-to-r from-indigo-600 to-[#1228b7] text-white font-semibold text-lg shadow-lg"
+            onClick={() => nav("/auth/register")}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            Start Investing Today
+          </motion.button>
+          <motion.button
+            className="px-8 py-4 rounded-lg bg-white/10 text-white font-semibold text-lg border border-white/20 backdrop-blur-sm"
+            onClick={() => nav("/auth/login")}
+            variants={buttonVariants}
+            whileHover={{
+              scale: 1.05,
+              backgroundColor: "rgba(255,255,255,0.15)",
+            }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Explore Plans
+          </motion.button>
+        </motion.div>
+
+        <motion.div
+          className="mt-16 grid grid-cols-4 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+          variants={itemVariants}
+          transition={{ delay: 0.6 }}
+        >
+          {[
+            { value: "24/7", label: "Market Monitoring" },
+            { value: "AI", label: "Powered Analysis" },
+            { value: "Secure", label: "Transactions" },
+            { value: "Daily", label: "Profit Returns" },
+          ].map((item, index) => (
+            <div
+              key={index}
+              className="bg-white/5 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+            >
+              <p className="text-2xl font-bold text-[#d7d737] mb-1">
+                {item.value}
+              </p>
+              <p className="text-gray-300 text-sm">{item.label}</p>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
     </div>
   );
-}
+};
 
 export default Hero;

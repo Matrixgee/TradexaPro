@@ -1,155 +1,133 @@
-import { Link } from "react-router-dom";
-import Logo from "../assets/ExpressPro.png";
-import { FormEvent, useState } from "react";
-import axios from "axios";
-import toast from "react-hot-toast";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { FaRegEye } from "react-icons/fa6";
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { userdata, userToken } from "../Function/Slice";
+import InputField from "../Components/inputfield";
+import axios from "../config/axiosconfig";
+import toast from "react-hot-toast";
 
-interface LoginProps {
-  test;
-}
+const Login = () => {
+  const navigate = useNavigate();
 
-const Login: React.FC<LoginProps> = () => {
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [showPassword, setshowPassword] = useState(false);
-  const data = { userName, password };
-  const url = "https://exp-pro-psi.vercel.app/api/user/login";
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const Nav = useNavigate();
-  const dispatch = useDispatch();
-
-  const HandleShowPassword = () => {
-    setshowPassword(!showPassword);
-  };
-
-  const handleLogin = async (e: FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!userName || !password) {
-      toast.error("Please input all fields");
-      return;
-    }
-    const toastLoadingId = toast.loading("Please wait...");
+    const toastId = toast.loading("Please wait...");
     setLoading(true);
+    setError("");
+
+    // Build payload dynamically
+    const payload: Record<string, string> = {
+      password,
+    };
+
+    if (identifier.includes("@")) {
+      payload.email = identifier;
+    } else {
+      payload.userName = identifier;
+    }
+
     try {
-      const response = await axios.post(url, data);
-      const { token, data: userData } = response.data;
-
-      localStorage.setItem("Token", token);
-      localStorage.setItem("userName", userName);
-
-      if (userData.isAdmin) {
-        toast.success("Welcome Admin", { duration: 2000 });
-        setTimeout(() => {
-          Nav("/admin/testing");
-        }, 1000);
-      } else {
-        toast.success(response.data.message, { duration: 2000 });
-        setTimeout(() => {
-          Nav("/user/overview");
-        }, 2000);
-      }
-
-      dispatch(userdata(userData));
-      dispatch(userToken(token));
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const errorMsg =
-          error.response?.data?.message || "An unexpected error occurred";
-        toast.error(errorMsg, { duration: 3000 });
-      } else {
-        toast.error("Error occurred");
-      }
+      const response = await axios.post("/user/login", payload);
+      toast.success("Login successful");
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.data));
+      navigate("/user/overview");
+    } catch (err: any) {
+      const message =
+        err.response?.data?.message || "Login failed. Please try again.";
+      setError(message);
+      toast.error(message);
     } finally {
+      toast.dismiss(toastId);
       setLoading(false);
-      toast.dismiss(toastLoadingId);
     }
   };
 
   return (
-    <div className="w-[100%] h-[100vh] bg-[#023e8a] flex justify-center items-center">
-      <div className="w-[35%] h-[90%] bg-[#FDFDF7] rounded-lg flex justify-center gap-[6%] items-center flex-col phone:w-[80%]">
-        <div className="w-[100%] h-[17%] flex justify-center items-center">
-          <img src={Logo} alt="" className="w-[90%] h-[90%] object-contain" />
-        </div>
-        <div className="w-[100%] h-[15%]  flex justify-center px-4  items-center flex-col  smallPhone:w-[90%]">
-          <div className="w-[90%] h-[40%] flex flex-col justify-center items-center">
-            <h2 className="text-[1.5rem] font-medium text-[#0466c8]">
-              Welcome Back!
-            </h2>
-            <p className=" text-sm  font-semibold  text-[#979dac] smallPhone:text-[10px]">
-              Glad to see you again 👋 Login to your account below
-            </p>
+    <div className="w-full max-w-md px-6">
+      <div className="bg-[#2a347a] rounded-lg shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">
+          Sign In
+        </h2>
+
+        {error && (
+          <div className="bg-red-500/20 border border-red-500 text-red-100 px-4 py-3 rounded mb-4">
+            {error}
           </div>
-        </div>
-        <form
-          action=""
-          className="w-[90%] h-[50%]  justify-around items-center flex flex-col"
-        >
-          <div className="w-[100%] h-[35%]  flex justify-center items-start flex-col ">
-            <label htmlFor="" className="font-semibold text-[#031d44]">
-              Username
-            </label>
-            <input
+        )}
+
+        <form onSubmit={handleSubmit}>
+          {/* Username or Email */}
+          <div className="mb-5">
+            <InputField
+              label="Username or Email"
               type="text"
-              className="w-[100%] h-[55%] rounded-md shadow-sm outline-none px-2 phone:h-[50%]"
-              placeholder="e.g Johndoe"
-              onChange={(e) => setUserName(e.target.value)}
+              placeholder="Enter your username or email"
+              value={identifier}
+              onChange={(value: any) => {
+                setIdentifier(value);
+                if (error) setError("");
+              }}
+              required
             />
           </div>
-          <div className="w-[100%] h-[35%]  flex justify-center items-start flex-col ">
-            <label htmlFor="" className="font-semibold text-[#031d44]">
-              Password
-            </label>
-            <div className="w-[100%] h-[45%] flex justify-center items-center bg-white rounded-lg shadow-sm">
-              <input
-                type={showPassword ? "text" : "password"}
-                placeholder="******"
-                className="w-[100%] h-[100%] px-3 rounded-lg outline-none"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-              />
-              {showPassword ? (
-                <FaRegEye
-                  className="w-[30%] h-[30%] cursor-pointer"
-                  onClick={HandleShowPassword}
-                />
-              ) : (
-                <FaRegEyeSlash
-                  className="w-[30%] h-[30%] cursor-pointer"
-                  onClick={HandleShowPassword}
-                />
-              )}
+
+          {/* Password */}
+          <div className="mb-6">
+            <div className="flex justify-between items-center mb-2">
+              <label className="block text-gray-200 text-sm font-medium">
+                Password
+              </label>
             </div>
+            <InputField
+              type="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(value: any) => {
+                setPassword(value);
+                if (error) setError("");
+              }}
+              required
+            />
           </div>
-          <div className="w-[100%] h-[40%]  flex justify-around items-center flex-col ">
-            <div className=" w-[100%] h-[30%] flex justify-end items-center">
-              <Link to="/forgetpass" className="text-red-500 font-semibold">
-                Forget Password?
-              </Link>
-            </div>
-            <button
-              className="w-[100%] h-[45%] bg-[#023e8a] text-[#FDFDF7] font-semibold rounded-md phone:h-[40%]"
-              onClick={handleLogin}
+
+          <div className="mb-8">
+            <a
+              href="#"
+              onClick={() => navigate("/forgot-password")}
+              className="text-sm text-[#e4e45a] hover:text-[#FFFF00]"
             >
-              {loading ? "Loading" : "Login"}
-            </button>
-            {/* <div className='w-[70%] h-[40%]  flex justify-center items-center'> */}
-            <p className="text-[#7d8597]">
-              Don't have an account ?{" "}
-              <Link to="/reg" className="font-semibold text-[#031d44]">
-                Sign Up
-              </Link>{" "}
-            </p>
-            {/* </div> */}
+              Forgot Password?
+            </a>
           </div>
+
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full h-12 rounded-md font-medium text-white bg-[#162691] hover:bg-[#111e74] transition-colors ${
+              loading ? "opacity-70 cursor-not-allowed" : ""
+            }`}
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
         </form>
+        <div className="mt-6 text-center">
+          <p className="text-gray-300">
+            Don't have an account?{" "}
+            <a
+              href="#"
+              onClick={() => navigate("/auth/register")}
+              className="text-[#e4e45a] hover:text-[#FFFF00] font-medium"
+            >
+              Sign Up
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
