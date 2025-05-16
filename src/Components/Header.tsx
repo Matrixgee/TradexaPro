@@ -85,8 +85,8 @@ const Header = () => {
                   to="/"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-purple-500  border-purple-500"
-                      : "text-white hover:text-purple-300"
+                       ? "text-[#3d54ec]"
+                      : "text-white hover:text-[#adb4e2]"
                   }
                   onClick={handleClose}
                 >
@@ -96,8 +96,8 @@ const Header = () => {
                   to="/about"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-purple-500  border-purple-500"
-                      : "text-white hover:text-purple-300"
+                      ? "text-[#3d54ec]"
+                      : "text-white hover:text-[#adb4e2]"
                   }
                   onClick={handleClose}
                 >
@@ -107,8 +107,8 @@ const Header = () => {
                   to="/contact"
                   className={({ isActive }) =>
                     isActive
-                      ? "text-purple-500  border-purple-500"
-                      : "text-white hover:text-purple-300"
+                       ? "text-[#3d54ec]"
+                      : "text-white hover:text-[#adb4e2]"
                   }
                   onClick={handleClose}
                 >
@@ -116,7 +116,7 @@ const Header = () => {
                 </NavLink>
                 <div className="w-full h-[20%] text-white font-semibold  flex justify-start items-center">
                   <button
-                    className="px-9 py-2  border-purple-700 bg-purple-700 border rounded font-semibold text-white  transition-all duration-300"
+                    className="px-9 py-2  border-[#162691] bg-[#162691] hover:bg-[#111e74] border rounded font-semibold text-white  transition-all duration-300"
                     onClick={() => nav("/auth/register")}
                   >
                     Get Started

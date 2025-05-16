@@ -45,7 +45,7 @@ const Hero = () => {
         variants={containerVariants}
       >
         <motion.h1
-          className="text-6xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight"
+          className="text-5xl md:text-5xl lg:text-7xl font-bold text-white mb-6 leading-tight"
           variants={itemVariants}
         >
           Maximize Your{" "}
@@ -56,7 +56,7 @@ const Hero = () => {
         </motion.h1>
 
         <motion.p
-          className="text-2xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-10"
+          className="text-xl md:text-xl lg:2xl text-gray-300 max-w-3xl mx-auto mb-10"
           variants={itemVariants}
           transition={{ delay: 0.2 }}
         >
@@ -93,7 +93,7 @@ const Hero = () => {
         </motion.div>
 
         <motion.div
-          className="mt-16 grid grid-cols-4 md:grid-cols-4 gap-6 max-w-4xl mx-auto"
+          className="mt-16 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto"
           variants={itemVariants}
           transition={{ delay: 0.6 }}
         >
@@ -105,7 +105,7 @@ const Hero = () => {
           ].map((item, index) => (
             <div
               key={index}
-              className="bg-white/5 p-4 rounded-xl border border-white/10 backdrop-blur-sm"
+              className="bg-white/5 p-4 rounded-xl hover:border-[#5a6ff1] border border-white/10 backdrop-blur-sm"
             >
               <p className="text-2xl font-bold text-[#d7d737] mb-1">
                 {item.value}

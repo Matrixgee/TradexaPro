@@ -116,7 +116,7 @@ const ContactUs = () => {
       {/* Contact Information Section */}
       <section className="py-12 w-[90%]">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2  md:grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1  md:grid-cols-1 lg:grid-cols-2 gap-6">
             {contactInfo.map((item, index) => (
               <motion.div
                 key={index}
@@ -142,7 +142,7 @@ const ContactUs = () => {
       {/* Contact Form and Map Section */}
       <section className="py-16 w-[90%]">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -396,7 +396,7 @@ const ContactUs = () => {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-3 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6">
             {[
               {
                 question: "How do I get started with investing?",
@@ -440,12 +440,12 @@ const ContactUs = () => {
             viewport={{ once: true }}
             className="bg-gradient-to-r from-[#0f1858] to-[#525503] backdrop-blur-md rounded-2xl p-10 lg:p-16 text-center max-w-5xl mx-auto border border-[#363c61] shadow-xl shadow-[#363c61]"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+            <h2 className="text-3xl md:text-3xl lg:text-4xl font-bold mb-6">
               <span className="bg-gradient-to-r from-[#2e48f3] to-[#7d8105] bg-clip-text text-transparent">
                 Still Have Questions?
               </span>
             </h2>
-            <p className="text-xl text-gray-300 mb-10 max-w-3xl mx-auto">
+            <p className="text-xl  text-gray-300 mb-10 max-w-3xl mx-auto">
               Our dedicated support team is ready to assist you with any
               questions about our cryptocurrency investment services.
             </p>

@@ -66,7 +66,7 @@ const Faq = () => {
               className={`border border-gray-800 rounded-xl transition-all duration-300 ${
                 selected === index
                   ? "bg-gray-900/80 hover:border-[#4f67ff]"
-                  : "bg-gray-800/60 hover:hover:border-[#5a6ff1]"
+                  : "bg-gray-800/60 hover:border-[#5a6ff1]"
               }`}
             >
               <button
@@ -82,7 +82,7 @@ const Faq = () => {
                 <motion.span
                   animate={{ rotate: selected === index ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
-                  className="text-purple-400"
+                  className="text-[#586bff]"
                 >
                   <FaChevronDown />
                 </motion.span>
