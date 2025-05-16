@@ -1,142 +1,337 @@
-import  { FormEvent, useState } from 'react';
-import Logo from '../assets/ExpressPro.png'
-import { FaRegEye } from "react-icons/fa6";
-import { FaRegEyeSlash } from "react-icons/fa6";
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import { Modal } from 'antd';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import InputField from "../Components/inputfield";
+import axios from "../config/axiosconfig";
+import toast from "react-hot-toast";
 
+interface Country {
+  country: string;
+  code: string;
+}
 
-
+interface RegisterFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  userName: string;
+  password: string;
+  confirmPassword: string;
+  phoneNumber: string;
+  country: string;
+}
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [formData, setFormData] = useState<RegisterFormData>({
+    firstName: "",
+    lastName: "",
+    userName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phoneNumber: "",
+    country: "",
+  });
+  const [errors, setErrors] = useState<Partial<RegisterFormData>>({});
 
-  const [fullName, setfullName] = useState<string> ('')
-  const [userName, setuserName] = useState <string> ('')
-  const [email, setemail] = useState <string> ('')
-  const [password, setpassword] = useState <string> ('')
-  const [confirmPassword, setconfirmPassword] = useState <string> ('')
-  const [ShowPassword, setShowPassword] = useState<boolean>(false)
-const [ShowConfirmpassword, setShowConfirmpassword] = useState<boolean>(false)
-const [loading, setloading] = useState<boolean>(false)
-const [ShowModal, setShowModal] = useState <boolean>(false)
-
-const data = {fullName,userName,password,email,confirmPassword}
-const url = 'https://exp-pro.onrender.com/api/user/signup'
-
-// const Nav = useNavigate()
-  
-
-
-const HandleShowPassword = ()=>{
-setShowPassword(!ShowPassword)
-}
-const HandleConfirmPassword = ()=>{
-  setShowConfirmpassword(!ShowConfirmpassword)
-}
-
-
-const handleRegister = async (e: FormEvent) => {
-  e.preventDefault();
-
-  const passwordRegex = /^(?=.*[a-zA-Z0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]+$/;
-  const isValidPassword = passwordRegex.test(password);
-
-  if (!fullName || !userName || !password || !email || !confirmPassword) {
-    toast.error('Please fill all the fields');
-  } else if (confirmPassword !== password) {
-    toast.error('Passwords do not match');
-  } else if (!isValidPassword) {
-    toast.error('Password must contain at least one special character');
-  } else {
-    const toastLoadingId = toast.loading("Please wait...");
-    try {
-      setloading(true);
-      const response = await axios.post(url, data);
-      toast.success(response.data.message);
-      setShowModal(true);
-      
-      setfullName('');
-      setuserName('');
-      setemail('');
-      setpassword('');
-      setconfirmPassword('');
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const errorMsg = error.response?.data?.message || 'An unexpected error occurred';
-        toast.error(errorMsg, { duration: 3000 });
-      } else {
-        toast.error('Error occurred');
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const response = await fetch(
+          "https://countriesnow.space/api/v0.1/countries"
+        );
+        const data = await response.json();
+        const sortedCountries = data.data.sort((a: Country, b: Country) =>
+          a.country.localeCompare(b.country)
+        );
+        setCountries(sortedCountries);
+      } catch (error) {
+        console.error("Error fetching countries:", error);
+        // Fallback
+        setCountries([
+          { country: "United States", code: "US" },
+          { country: "United Kingdom", code: "GB" },
+          { country: "Canada", code: "CA" },
+          { country: "Australia", code: "AU" },
+          { country: "Germany", code: "DE" },
+          { country: "France", code: "FR" },
+          { country: "Japan", code: "JP" },
+          { country: "Brazil", code: "BR" },
+          { country: "India", code: "IN" },
+          { country: "China", code: "CN" },
+        ]);
       }
-    } finally {
-      setloading(false);
-      toast.dismiss(toastLoadingId);
+    };
+    fetchCountries();
+  }, []);
+
+  const handleChange = (field: keyof RegisterFormData, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    // Clear error when field is edited
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-  }
-};
+  };
 
+  const validateForm = (): boolean => {
+    const newErrors: Partial<RegisterFormData> = {};
+    let isValid = true;
 
+    // Required field validation
+    Object.entries(formData).forEach(([key, value]) => {
+      if (!value) {
+        newErrors[key as keyof RegisterFormData] = "This field is required";
+        isValid = false;
+      }
+    });
 
+    // Email validation
+    if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email address";
+      isValid = false;
+    }
 
+    // Password validation
+    if (formData.password && formData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
+      isValid = false;
+    }
+
+    // Password confirmation
+    if (
+      formData.password &&
+      formData.confirmPassword &&
+      formData.password !== formData.confirmPassword
+    ) {
+      newErrors.confirmPassword = "Passwords do not match";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setLoading(true);
+
+    const {
+      firstName,
+      lastName,
+      email,
+      userName,
+      password,
+      phoneNumber,
+      country,
+      confirmPassword,
+    } = formData;
+
+    const fullName = `${firstName} ${lastName}`;
+    const data = {
+      fullName: fullName,
+      email,
+      userName,
+      password,
+      confirmPassword: confirmPassword,
+      phone: phoneNumber,
+      country,
+    };
+
+    const loadingToast = toast.loading("Please wait...");
+    try {
+      const response = await axios.post("/user/signup", data);
+      console.log("Registration Response:", response.data);
+      toast.success("Registration Successful!");
+      navigate("/auth/login");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      toast.error(error.response?.data?.error || "Registration failed");
+    } finally {
+      toast.dismiss(loadingToast);
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="w-[100%] h-[55rem] bg-[#023e8a] flex justify-center items-center phone:h-[60rem]">
-      <div className="w-[35%] h-[95%] bg-[#FDFDF7] rounded-lg flex justify-center items-center flex-col phone:w-[85%]">
-        <div className="w-[100%] h-[12%] flex justify-center items-center">
-          <img src={Logo} alt="" className='w-[70%] h-[70%] object-contain' />
-        </div>
-        <div className='w-[100%] h-[11%] flex justify-center items-start px-6 flex-col'>
-          <h2 className='font-semibold text-[1.7rem] text-[#031d44]'>Register</h2>
-          <p className=' text-sm font-medium text-[#979dac]'>Enter your details below and create an account to get started.</p>
-        </div>
-        <form action="" className='w-[90%] h-[70%]'>
-          <div className='w-[100%] h-[15.5%]  flex justify-center items-start flex-col'>
-            <label htmlFor="" className='font-semibold text-[#031d44]'>FullName</label>
-            <input type="text"  placeholder='John Doe' className='w-[100%] h-[50%] px-3 shadow-sm  rounded-lg outline-none ' onChange={(e)=>setfullName(e.target.value)} value={fullName}/>
-          </div>
-          <div className='w-[100%] h-[15.5%]  flex justify-center items-start flex-col'>
-            <label htmlFor="" className='font-semibold text-[#031d44]'>UserName</label>
-            <input type="text"  placeholder='e.g Johndoe' className='w-[100%] h-[50%] px-3 shadow-sm  rounded-lg outline-none' onChange={(e)=>setuserName(e.target.value)} value={userName}/>
-          </div>
-          <div className='w-[100%] h-[15.5%]  flex justify-center items-start flex-col'>
-            <label htmlFor="" className='font-semibold text-[#031d44]'>Email</label>
-            <input type="email"  placeholder='e.g johndoe@mail.com' className='w-[100%] h-[50%] px-3 shadow-sm  rounded-lg outline-none' onChange={(e)=>setemail(e.target.value)} value={email}/>
-          </div>
-          <div className='w-[100%] h-[15.5%]  flex justify-center items-start flex-col'>
-            <label htmlFor="" className='font-semibold text-[#031d44]'>Password</label>
-            <div className='w-[100%] h-[50%] flex justify-center items-center bg-white rounded-lg shadow-sm'>
-              <input type={ShowPassword ? 'text' : 'password'}   placeholder='******' className='w-[100%] h-[100%] px-3 rounded-lg outline-none' onChange={(e)=>setpassword(e.target.value)} value={password}/>
-              {
-              ShowPassword ? <FaRegEye className='w-[30%] h-[30%] cursor-pointer' onClick={HandleShowPassword} /> : <FaRegEyeSlash className='w-[30%] h-[30%] cursor-pointer' onClick={HandleShowPassword}/>
-              }
-              
+    <div className="w-full max-w-2xl px-6">
+      <div className="bg-[#2a347a] rounded-lg shadow-lg p-8">
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">
+          Create Your Account
+        </h2>
+
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* First Name */}
+            <div>
+              <InputField
+                label="First Name"
+                type="text"
+                placeholder="Enter your first name"
+                value={formData.firstName}
+                onChange={(value) => handleChange("firstName", value)}
+                required
+                error={errors.firstName}
+              />
+            </div>
+
+            {/* Last Name */}
+            <div>
+              <InputField
+                label="Last Name"
+                type="text"
+                placeholder="Enter your last name"
+                value={formData.lastName}
+                onChange={(value) => handleChange("lastName", value)}
+                required
+                error={errors.lastName}
+              />
+            </div>
+
+            {/* Email */}
+            <div className="md:col-span-2">
+              <InputField
+                label="Email Address"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={(value) => handleChange("email", value)}
+                required
+                error={errors.email}
+              />
+            </div>
+            <div className="md:col-span-2">
+              <InputField
+                label="User Name"
+                type="text"
+                placeholder="Enter your UserName"
+                value={formData.userName}
+                onChange={(value) => handleChange("userName", value)}
+                required
+                error={errors.userName}
+              />
+            </div>
+
+            {/* Country Selection */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-200 mb-1">
+                Country
+              </label>
+              <select
+                className="w-full h-12 px-4 py-2 rounded-md bg-transparent
+                border border-gray-600 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                value={formData.country}
+                onChange={(e) => handleChange("country", e.target.value)}
+                required
+              >
+                <option value="">Select a country</option>
+                {countries.map((country) => (
+                  <option
+                    key={country.code || country.country}
+                    value={country.country}
+                  >
+                    {country.country}
+                  </option>
+                ))}
+              </select>
+              {errors.country && (
+                <p className="mt-1 text-sm text-red-400">{errors.country}</p>
+              )}
+            </div>
+
+            {/* Phone Number */}
+            <div className="md:col-span-2">
+              <InputField
+                label="Phone Number"
+                type="phone"
+                placeholder="Enter your phone number"
+                value={formData.phoneNumber}
+                onChange={(value) => handleChange("phoneNumber", value)}
+                required
+                error={errors.phoneNumber}
+              />
+            </div>
+
+            {/* Password */}
+            <div>
+              <InputField
+                label="Password"
+                type="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={(value) => handleChange("password", value)}
+                required
+                error={errors.password}
+              />
+            </div>
+
+            {/* Confirm Password */}
+            <div>
+              <InputField
+                label="Confirm Password"
+                type="password"
+                placeholder="Confirm your password"
+                value={formData.confirmPassword}
+                onChange={(value) => handleChange("confirmPassword", value)}
+                required
+                error={errors.confirmPassword}
+              />
             </div>
           </div>
-          <div className='w-[100%] h-[15.5%]  flex justify-center items-start flex-col'>
-            <label htmlFor="" className='font-semibold text-[#031d44]'>Confirm Password</label>
-            <div className='w-[100%] h-[50%] flex justify-center items-center bg-white rounded-lg shadow-sm'>
-              <input type={ShowConfirmpassword ? "text" : "password"}  placeholder='******' className='w-[100%] h-[100%] px-3 rounded-lg outline-none' onChange={(e)=>setconfirmPassword(e.target.value)} value={confirmPassword}/>
-              {
-              ShowConfirmpassword ? <FaRegEye className='w-[30%] h-[30%] cursor-pointer' onClick={HandleConfirmPassword} /> : <FaRegEyeSlash className='w-[30%] h-[30%] cursor-pointer' onClick={HandleConfirmPassword}/>
-              }
-            </div>
+
+          {/* Terms and Conditions */}
+          <div className="mt-6">
+            <label className="flex items-start">
+              <input
+                type="checkbox"
+                className="mt-1 mr-2 h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                required
+              />
+              <span className="text-sm text-gray-300">
+                By creating an account, you agree to our{" "}
+                <a href="#" className="text-[#e4e45a] hover:text-[#FFFF00] ">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-[#e4e45a] hover:text-[#FFFF00] ">
+                  Privacy Policy
+                </a>
+                .
+              </span>
+            </label>
           </div>
-          <div className='w-[100%] h-[23%] flex justify-around items-center flex-col'>
-            <button className='w-[100%] h-[30%] bg-[#023e8a] rounded-md text-[#Fdfdf7]' onClick={handleRegister} disabled={loading}>
-              {
-                loading ? 'Loading' : 'Register'
-              }
-            </button>
-            <p>Already have an account? <Link to='/logs' className='font-semibold text-[#031d44]'>Login</Link> </p>
-          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full h-12 mt-6 rounded-md font-medium text-white bg-[#162691] hover:bg-[#111e74] transition-colors
+              ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+          >
+            {loading ? "Creating Account..." : "Create Account"}
+          </button>
         </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-gray-300">
+            Already have an account?{" "}
+            <a
+              href="#"
+              onClick={() => navigate("/auth/login")}
+              className="text-[#e4e45a] hover:text-[#FFFF00]  font-medium"
+            >
+              Sign In
+            </a>
+          </p>
+        </div>
       </div>
-      <Modal title="Registration Successful" open={ShowModal} onOk={() => setShowModal(false)} onCancel={() => setShowModal(false)}>
-        <p>Your account has been registered successfully. Please check your email for verification.</p>
-      </Modal>
     </div>
-  )
-}
+  );
+};
 
 export default Register;

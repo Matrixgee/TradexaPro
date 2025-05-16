@@ -18,27 +18,33 @@ import AdminPrivate from "./Routes/AdminPrivate";
 // import Users from "./Components/Admin/Users";
 import AdminTransactions from "./Components/Admin/AdminTransactions";
 import Admin from "./Components/Admin/Admin";
-import About from "./Page/About/About";
-import Insight from "./Page/Insights/Insight";
-import Planning from "./Page/PlanningService/Planning";
-import Investment from "./Page/Investment/Investment";
 import Security from "./Components/DashBoard/Security";
 import ForgetPassword from "./Auth/ForgetPassword";
 import Testing from "./Components/Admin/Testing";
+import AuthLayout from "./Layouts/Authlay";
+import ContactUs from "./Page/ContactUs";
+import AboutUs from "./Page/About/AboutUs";
 
 const Router = createBrowserRouter([
   {
-    path: "/logs",
-    element: <Login />,
+    path: "auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+      {
+        path: "forgetpass",
+        element: <ForgetPassword />,
+      },
+    ],
   },
-  {
-    path: "/reg",
-    element: <Register />,
-  },
-  {
-    path: "forgetpass",
-    element: <ForgetPassword />,
-  },
+
   {
     path: "",
     element: <Layout />,
@@ -49,19 +55,11 @@ const Router = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About />,
+        element: <AboutUs />,
       },
       {
-        path: "insights",
-        element: <Insight />,
-      },
-      {
-        path: "Planning-services",
-        element: <Planning />,
-      },
-      {
-        path: "investment",
-        element: <Investment />,
+        path: "contact",
+        element: <ContactUs />,
       },
     ],
   },
