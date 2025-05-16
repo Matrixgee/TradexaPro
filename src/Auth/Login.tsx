@@ -33,10 +33,18 @@ const Login = () => {
 
     try {
       const response = await axios.post("/user/login", payload);
+
       toast.success("Login successful");
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.data));
-      navigate("/user/overview");
+      const { data } = response.data;
+      if (data?.isAdmin) {
+        navigate("/admin/testing");
+        toast.success("Login successful, Welcome Admin");
+      } else {
+        navigate("/user/overview");
+        toast.success(`Login successful, Welcome ${data?.fullName}`);
+      }
     } catch (err: any) {
       const message =
         err.response?.data?.message || "Login failed. Please try again.";
