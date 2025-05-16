@@ -42,7 +42,7 @@ const AuthLayout = () => {
 
       {/* Logo Header */}
       <div
-        className={`w-full max-w-md px-4  transition-all  duration-700 ease-out transform ${
+        className={`w-full max-w-md px-4  bg-black transition-all  duration-700 ease-out transform ${
           animateIn && imageLoaded
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-8"
@@ -75,7 +75,7 @@ const AuthLayout = () => {
       >
         <div className="border-t border-gray-800 mt-6 pt-6">
           <p className="text-center text-gray-400 text-sm">
-            Copyright © {new Date().getFullYear()} EXPRESS TRADE PRO.
+            Copyright © {new Date().getFullYear()} Tradexa Pro.
             <br className="md:hidden" /> All Rights Reserved.
           </p>
           <div className="flex justify-center mt-4 space-x-4">

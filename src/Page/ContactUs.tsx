@@ -68,7 +68,7 @@ const ContactUs = () => {
     {
       icon: <FaEnvelope />,
       title: "Email Address",
-      details: "topcapitalmining@gmail.com",
+      details: "",
     },
     {
       icon: <FaClock />,

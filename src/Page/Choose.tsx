@@ -47,7 +47,7 @@ const Choose = () => {
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Why Choose{" "}
             <span className="text-transparent bg-clip-text  bg-gradient-to-r from-[#919ce4] to-[#2c44dd]">
-              Express Trade Pro
+              Tradexa Pro
             </span>
           </h2>
           <p className="text-xl text-gray-400 max-w-3xl mx-auto">

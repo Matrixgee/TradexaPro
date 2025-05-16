@@ -8,8 +8,12 @@ const Footer = () => {
     >
       <div className="container mx-auto grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-12">
         {/* Company Info */}
-        <div className="flex flex-col space-y-6">
-          <img src={logo} alt="Company Logo" className="w-40 h-40" />
+        <div className="flex flex-col space-y-2">
+          <img
+            src={logo}
+            alt="Company Logo"
+            className="w-full h-[100%] object-cover"
+          />
           <div>
             <h2 className="font-bold text-xl mb-2">Location HQ</h2>
             <p className="text-gray-400">
@@ -101,8 +105,7 @@ const Footer = () => {
       {/* Footer Bottom */}
       <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
         <p className="text-sm text-gray-400 mb-4 md:mb-0">
-          &copy; {new Date().getFullYear()} EXPRESS TRADE PRO. All rights
-          reserved.
+          &copy; {new Date().getFullYear()} Tradexa Pro. All rights reserved.
         </p>
         <div className="flex space-x-4">
           <BsFacebook className="w-6 h-6 text-gray-400 hover:text-white transition-colors cursor-pointer" />

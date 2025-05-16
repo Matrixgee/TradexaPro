@@ -19,12 +19,8 @@ const Header = () => {
 
   return (
     <div className="w-full h-[12vh] bg-gradient-to-b from-[#030514] to-[#040720] flex justify-around items-center">
-      <div className="w-[30%] md:w-[25%] flex justify-start items-center">
-        <img
-          src={logo}
-          alt="Logo"
-          className="w-full h-full max-w-[150px] md:max-w-[200px] object-contain"
-        />
+      <div className="w-[30%] md:w-[25%] h-full flex justify-start items-center">
+        <img src={logo} alt="Logo" className="w-full h-full object-cover" />
       </div>
       <div className="w-[60%] h-full flex justify-around items-center max-md:hidden max-lg:hidden">
         <div className="w-[40%] h-full text-white font-semibold flex justify-around items-center">
