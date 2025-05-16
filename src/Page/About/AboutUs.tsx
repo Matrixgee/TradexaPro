@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { FaShieldAlt, FaChartLine, FaUserTie, FaGlobe } from "react-icons/fa";
+import logo from "../../assets/tradexaprologo.png";
 
 // import Logo from "../assets/dan 1.svg";
 
@@ -49,7 +50,7 @@ const AboutUs = () => {
           >
             <h1 className="text-5xl font-bold mb-6">
               <span className="bg-gradient-to-r from-[#233ff8] to-[#dfea0e] bg-clip-text text-transparent">
-                About Top Capital Mining
+                About Tradexa Pro
               </span>
             </h1>
             <p className="text-xl text-gray-300 mb-10">
@@ -73,7 +74,7 @@ const AboutUs = () => {
               <h2 className="text-3xl font-bold mb-6">Our Story</h2>
               <div className="h-1 w-20 bg-gradient-to-r from-[#2e48f3] to-[#7d8105] mb-8 rounded-full" />
               <p className="text-gray-300 w- mb-6">
-                Founded in 2018, Top Capital Mining was established with a clear
+                Founded in 2018, Tradexa Pro was established with a clear
                 vision: to bridge the gap between traditional finance and the
                 emerging world of cryptocurrency and blockchain technology.
               </p>
@@ -102,9 +103,9 @@ const AboutUs = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 rounded-xl transform rotate-3" />
               <img
-                src=""
+                src={logo}
                 alt="Top logo"
-                className="relative z-10 max-w-md mx-auto"
+                className="relative z-10 max-w-[400px] mx-auto"
               />
             </motion.div>
           </div>
@@ -191,8 +192,8 @@ const AboutUs = () => {
               Ready to Start Your Investment Journey?
             </h2>
             <p className="text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of investors who trust Top Capital Mining to guide
-              their cryptocurrency investments.
+              Join thousands of investors who trust Tradexa Pro to guide their
+              cryptocurrency investments.
             </p>
             <a
               href="/auth/register"

@@ -7,9 +7,9 @@ const Faq = () => {
 
   const faqItems = [
     {
-      question: "What is Top Capital Mining?",
+      question: "What is Tradexa Pro?",
       answer:
-        "Top Capital Mining is a platform that allows you to buy, sell, and trade cryptocurrencies securely. It offers investment plans with attractive returns.",
+        "Tradexa Pro is a platform that allows you to buy, sell, and trade cryptocurrencies securely. It offers investment plans with attractive returns.",
     },
     {
       question: "How do I get started?",
@@ -24,7 +24,7 @@ const Faq = () => {
     {
       question: "Is my investment safe?",
       answer:
-        "Yes Top Capital Mining Finance prioritizes security. We use advanced encryption and security protocols to protect your investments and personal information.",
+        "Yes Tradexa Pro Finance prioritizes security. We use advanced encryption and security protocols to protect your investments and personal information.",
     },
     {
       question: "How can I contact customer support?",
