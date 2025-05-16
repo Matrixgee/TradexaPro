@@ -44,7 +44,7 @@ const Choose = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16" data-aos="fade-up">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
             Why Choose{" "}
             <span className="text-transparent bg-clip-text  bg-gradient-to-r from-[#919ce4] to-[#2c44dd]">
               Tradexa Pro
@@ -56,7 +56,7 @@ const Choose = () => {
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-3 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
               key={feature.id}
@@ -97,7 +97,7 @@ const Choose = () => {
 
         {/* Stats Bar */}
         <div
-          className="mt-20 grid grid-cols-4 md:grid-cols-4 gap-4"
+          className="mt-20 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4"
           data-aos="fade-up"
           data-aos-delay="300"
         >
@@ -109,7 +109,7 @@ const Choose = () => {
           ].map((stat, index) => (
             <div
               key={index}
-              className="bg-gray-800/50 backdrop-blur-sm rounded-lg p-6 border border-gray-700/50 hover:border-purple-500/30 transition-all"
+              className="bg-gray-800/50 backdrop-blur-sm hover:border-[#5a6ff1] rounded-lg p-6 border border-gray-700/50 hover:border-purple-500/30 transition-all"
             >
               <p className="text-3xl font-bold text-[#d7d737] mb-1">
                 {stat.value}

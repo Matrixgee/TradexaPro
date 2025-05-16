@@ -6,7 +6,7 @@ const Footer = () => {
       className="bg-[#0E0E0E] text-white py-16 px-4 md:px-8 lg:px-16"
       id="footer"
     >
-      <div className="container mx-auto grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
         {/* Company Info */}
         <div className="flex flex-col space-y-2">
           <img

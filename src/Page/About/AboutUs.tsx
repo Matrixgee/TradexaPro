@@ -64,7 +64,7 @@ const AboutUs = () => {
       {/* Our Story Section */}
       <section className="py-20 relative w-[90%]">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -101,7 +101,7 @@ const AboutUs = () => {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-pink-500/20 rounded-xl transform rotate-3" />
+              <div className="absolute inset-0 bg-[#3644af5e] rounded-xl transform rotate-3" />
               <img
                 src={logo}
                 alt="Top logo"
@@ -131,7 +131,7 @@ const AboutUs = () => {
           </motion.div>
 
           <div className="max-w-7xl mx-auto p-4">
-            <div className="grid grid-cols-4 md:grid-col-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-col-2 lg:grid-cols-4 gap-8">
               {values.map((value, index) => (
                 <motion.div
                   key={index}
@@ -153,7 +153,7 @@ const AboutUs = () => {
 
       <section className="py-20 w-full bg-gradient-to-b from-[#19225e] to-[#071571]">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { value: "$250M+", label: "Assets Under Management" },
               { value: "20K+", label: "Active Investors" },
