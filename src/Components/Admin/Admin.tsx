@@ -27,7 +27,7 @@ const Admin = () => {
     console.log("Logging out..."); // Check if function is called
     dispatch(clearOneUser());
     console.log("State after logout:", store.getState().mySlice); // Log the updated state
-    nav("/logs");
+    nav("/auth/login");
   };
 
   return (
