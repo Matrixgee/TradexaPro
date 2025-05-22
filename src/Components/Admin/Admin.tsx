@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import logo from "../../assets/ExpressPro.png";
+import logo from "../../assets/tradexaprologo.png";
 import { BiUser } from "react-icons/bi";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -17,6 +17,7 @@ const Admin = () => {
   const [show, setShow] = useState<boolean>(false);
 
   const user = useSelector((state: RootState) => state.mySlice.tradeUser);
+  console.log(user);
 
   const nav = useNavigate();
 

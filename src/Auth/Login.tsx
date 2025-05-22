@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../Components/inputfield";
 import axios from "../config/axiosconfig";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { userdata, userToken } from "../Function/Slice";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -12,6 +14,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,8 +39,9 @@ const Login = () => {
       const response = await axios.post("/user/login", payload);
 
       toast.success("Login successful");
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.data));
+
+      dispatch(userdata(response.data.data));
+      dispatch(userToken(response.data.token));
       const { data } = response.data;
       if (data?.isAdmin) {
         navigate("/admin/testing");
@@ -45,6 +50,10 @@ const Login = () => {
         navigate("/user/overview");
         toast.success(`Login successful, Welcome ${data?.fullName}`);
       }
+      console.log(
+        "Navigating to:",
+        data?.isAdmin ? "/admin/testing" : "/user/overview"
+      );
     } catch (err: any) {
       const message =
         err.response?.data?.message || "Login failed. Please try again.";
