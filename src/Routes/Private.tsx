@@ -1,8 +1,7 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import RootState from '../Function/Rootstate';
-
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import RootState from "../Function/Rootstate";
 
 interface PrivateRouteProps {
   // path: string;
@@ -10,17 +9,15 @@ interface PrivateRouteProps {
   children?: React.ReactNode;
 }
 
-const Private: React.FC<PrivateRouteProps> = ({  element, children }) => {
-  const userToken = useSelector((state:RootState) => state.mySlice.token);
+const Private: React.FC<PrivateRouteProps> = ({ element, children }) => {
+  const userToken = useSelector((state: RootState) => state.mySlice.token);
 
-  
-  
-  
-
-  return userToken === '' ? (
-    <Navigate to="/logs" replace />
+  return userToken === "" ? (
+    <Navigate to="/auth/login" replace />
+  ) : children ? (
+    <>{children}</>
   ) : (
-    children ? <>{children}</> : <>{element}</>
+    <>{element}</>
   );
 };
 
