@@ -16,14 +16,14 @@ interface RegisterFormData {
   userName: string;
   password: string;
   confirmPassword: string;
-  phoneNumber: string;
-  country: string;
 }
 
 const Register = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
+  console.log(countries);
+
   const [formData, setFormData] = useState<RegisterFormData>({
     firstName: "",
     lastName: "",
@@ -31,8 +31,6 @@ const Register = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    phoneNumber: "",
-    country: "",
   });
   const [errors, setErrors] = useState<Partial<RegisterFormData>>({});
 
@@ -126,8 +124,7 @@ const Register = () => {
       email,
       userName,
       password,
-      phoneNumber,
-      country,
+
       confirmPassword,
     } = formData;
 
@@ -138,8 +135,6 @@ const Register = () => {
       userName,
       password,
       confirmPassword: confirmPassword,
-      phone: phoneNumber,
-      country,
     };
 
     const loadingToast = toast.loading("Please wait...");
@@ -218,7 +213,7 @@ const Register = () => {
             </div>
 
             {/* Country Selection */}
-            <div className="md:col-span-2">
+            {/* <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-200 mb-1">
                 Country
               </label>
@@ -242,10 +237,10 @@ const Register = () => {
               {errors.country && (
                 <p className="mt-1 text-sm text-red-400">{errors.country}</p>
               )}
-            </div>
+            </div> */}
 
             {/* Phone Number */}
-            <div className="md:col-span-2">
+            {/* <div className="md:col-span-2">
               <InputField
                 label="Phone Number"
                 type="phone"
@@ -255,7 +250,7 @@ const Register = () => {
                 required
                 error={errors.phoneNumber}
               />
-            </div>
+            </div> */}
 
             {/* Password */}
             <div>
