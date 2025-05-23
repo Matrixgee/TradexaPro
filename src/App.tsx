@@ -1,135 +1,39 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Login from "./Auth/Login";
-import Register from "./Auth/Register";
-import Home from "./Page/Home";
-import Layout from "./Components/Layout";
-import Dashboard from "./Components/DashBoard/Dashboard";
-import Deposit from "./Components/DashBoard/Deposit";
-import MyPlans from "./Components/DashBoard/MyPlans";
-import TradingPlans from "./Components/DashBoard/TradingPlans";
-import Withdraw from "./Components/DashBoard/Withdraw";
-import Account from "./Components/DashBoard/Account";
-import Transactions from "./Components/DashBoard/Transactions";
-import DashOverview from "./Components/DashBoard/DashOverview";
-import Profile from "./Components/DashBoard/Profile";
-import Private from "./Routes/Private";
-
-import AdminPrivate from "./Routes/AdminPrivate";
-// import Users from "./Components/Admin/Users";
-import AdminTransactions from "./Components/Admin/AdminTransactions";
-import Admin from "./Components/Admin/Admin";
-import Security from "./Components/DashBoard/Security";
-import ForgetPassword from "./Auth/ForgetPassword";
-import Testing from "./Components/Admin/Testing";
-import AuthLayout from "./Layouts/Authlay";
-import ContactUs from "./Page/ContactUs";
-import AboutUs from "./Page/About/AboutUs";
-
-const Router = createBrowserRouter([
-  {
-    path: "auth",
-    element: <AuthLayout />,
-    children: [
-      {
-        path: "login",
-        element: <Login />,
-      },
-      {
-        path: "register",
-        element: <Register />,
-      },
-      {
-        path: "forgetpass",
-        element: <ForgetPassword />,
-      },
-    ],
-  },
-
-  {
-    path: "",
-    element: <Layout />,
-    children: [
-      {
-        path: "",
-        element: <Home />,
-      },
-      {
-        path: "/about",
-        element: <AboutUs />,
-      },
-      {
-        path: "contact",
-        element: <ContactUs />,
-      },
-    ],
-  },
-
-  {
-    path: "admin",
-    element: <AdminPrivate element={<Admin />}></AdminPrivate>,
-    children: [
-      // {
-      //   path: "users",
-      //   element: <Users />,
-      // },
-      {
-        path: "adminTrans",
-        element: <AdminTransactions />,
-      },
-      {
-        path: "testing",
-        element: <Testing />,
-      },
-    ],
-  },
-  {
-    path: "/user",
-    element: <Private element={<Dashboard />}></Private>,
-    children: [
-      {
-        path: "deposit",
-        element: <Deposit />,
-      },
-      {
-        path: "my-plans",
-        element: <MyPlans />,
-      },
-      {
-        path: "tradingPlans",
-        element: <TradingPlans />,
-      },
-      {
-        path: "withdraw",
-        element: <Withdraw />,
-      },
-      {
-        path: "useracct",
-        element: <Account />,
-        children: [
-          {
-            path: "profile",
-            element: <Profile />,
-          },
-          {
-            path: "security",
-            element: <Security />,
-          },
-        ],
-      },
-      {
-        path: "transaction",
-        element: <Transactions />,
-      },
-      {
-        index: true,
-        path: "overview",
-        element: <DashOverview />,
-      },
-    ],
-  },
-]);
+import { useState, useEffect } from "react";
+import { RouterProvider } from "react-router-dom";
+import { Router } from "./Routes/mainroutes";
 
 const App = () => {
+  const [loading, setLoading] = useState(true);
+  const baseUrl = "https://exp-pro.onrender.com/api";
+
+  useEffect(() => {
+    const wakeUpServer = async () => {
+      try {
+        await fetch(baseUrl);
+        console.log("Server awakened");
+      } catch (error) {
+        console.error("Error waking up server:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    wakeUpServer();
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 4000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#060220]"></div>
+      </div>
+    );
+  }
+
   return <RouterProvider router={Router} />;
 };
 

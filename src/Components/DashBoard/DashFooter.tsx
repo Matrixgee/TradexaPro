@@ -1,9 +1,5 @@
-
-
 const DashFooter = () => {
-  return (
-    <div>DashFooter</div>
-  )
-}
+  return <div>DashFooter</div>;
+};
 
-export default DashFooter
+export default DashFooter;
