@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "../Components/inputfield";
-import axios from "../config/axiosconfig";
+import axios from "axios";
 import toast from "react-hot-toast";
 
 interface Country {
@@ -23,6 +23,8 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const [countries, setCountries] = useState<Country[]>([]);
   console.log(countries);
+
+  const url = "https://exp-pro.onrender.com/api/user/signup";
 
   const [formData, setFormData] = useState<RegisterFormData>({
     firstName: "",
@@ -139,7 +141,7 @@ const Register = () => {
 
     const loadingToast = toast.loading("Please wait...");
     try {
-      const response = await axios.post("/user/signup", data);
+      const response = await axios.post(url, data);
       console.log("Registration Response:", response.data);
       toast.success("Registration Successful!");
       navigate("/auth/login");

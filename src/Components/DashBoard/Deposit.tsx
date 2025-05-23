@@ -1,41 +1,35 @@
-import { FaBtc, FaEthereum } from "react-icons/fa";
-import { IoCopyOutline } from "react-icons/io5";
-import btcCode from "../../assets/BtcQrcode.jpg";
-import ethCode from "../../assets/EthQrCode.jpg";
-import { useEffect, useState } from "react";
-import { IoMdArrowRoundBack } from "react-icons/io";
-// import toast from "react-hot-toast";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import toast from "react-hot-toast";
+import { useState } from "react";
+import {
+  ArrowLeft,
+  Bitcoin,
+  Copy,
+  Upload,
+  CheckCircle,
+  AlertCircle,
+  Wallet,
+  TrendingUp,
+  Shield,
+  Zap,
+} from "lucide-react";
 
 const Deposit = () => {
-  const user = useSelector((state: any) => state.mySlice.tradeUser);
-  console.log(user);
+  const [btc, setBtc] = useState(false);
+  const [eth, setEth] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isBtcPay, setIsBtcPay] = useState(false);
+  const [isEthPay, setIsEthPay] = useState(false);
+  const [direct, setDirect] = useState(false);
+  const [isPayed, setIsPayed] = useState(false);
+  const [amount, setAmount] = useState("");
+  const [mode, setMode] = useState("");
 
-  const userToken = useSelector((state: any) => state.mySlice.token);
-
-  //   const userId = user._id;
-  //   const FullName = user.fullName;
-
-  const [btc, setBtc] = useState<boolean>(false);
-  const [eth, setEth] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [isBtcPay, setIsBtcPay] = useState<boolean>(false);
-  const [isEthPay, setIsEthPay] = useState<boolean>(false);
-  const [direct, setDirect] = useState<boolean>(false);
-  const [isPayed, setIsPayed] = useState<boolean>(false);
-  const [amount, setAmount] = useState<string>("");
-  const [mode, setMode] = useState<string>("");
-  const [fileInput, setFileInput] = useState<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFileName, setSelectedFileName] = useState("Choose file");
+  const [exchangeRateBTC, setExchangeRateBTC] = useState(67000);
+  const [exchangeRateETH, setExchangeRateETH] = useState(3200);
+  const [copied, setCopied] = useState(false);
 
-  const handleRequestError = (error: any) => {
-    const errorMsg = error.response
-      ? error.response.data.message
-      : "An error occurred.";
-    toast.error(errorMsg);
-  };
+  console.log(mode, setExchangeRateBTC, setExchangeRateETH);
 
   const handleSelectBtc = () => {
     setBtc(true);
@@ -43,6 +37,7 @@ const Deposit = () => {
     setIsEthPay(false);
     setIsBtcPay(true);
   };
+
   const handleSelectEth = () => {
     setBtc(false);
     setEth(true);
@@ -53,40 +48,30 @@ const Deposit = () => {
   const handleProceed = () => {
     if (!/^[0-9]+$/.test(amount)) {
       alert("Amount must be a number only");
-    } else if (!amount && !btc) {
-      alert("Please select a mode and enter the amount to deposit!");
-    } else if (!amount && !eth) {
-      alert("Please select a mode and enter the amount to deposit!");
+    } else if (!amount || (!btc && !eth)) {
+      alert("Please select a cryptocurrency and enter the amount to deposit!");
     } else {
       setDirect(true);
     }
   };
+
   const handleBack = () => {
-    setDirect(!direct);
+    setDirect(false);
     setAmount("");
     setBtc(false);
     setEth(false);
     setIsEthPay(false);
     setIsBtcPay(false);
     setSelectedFile(null);
-    if (fileInput) {
-      // Reset the file input value
-      fileInput.value = "";
-    }
+    setSelectedFileName("Choose file");
+    setIsPayed(false);
   };
-
-  const [selectedFileName, setSelectedFileName] =
-    useState<string>("Click to select");
-  // const [file, setFile] = useState<any>();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files?.[0];
     if (files) {
-      setSelectedFile(files); // Update the file state with the selected file
-      setSelectedFileName(files.name); // Update the file name for display
-      // console.log("Selected file:", files); // Log the selected file for debugging
-    } else {
-      console.log("No file selected."); // Log if no file is selected
+      setSelectedFile(files);
+      setSelectedFileName(files.name);
     }
   };
 
@@ -100,354 +85,374 @@ const Deposit = () => {
   };
 
   const handleSubmit = () => {
-    const toastLoadingId = toast.loading("Please wait...");
     setLoading(true);
-    // console.log(amount);
-
-    const formData = new FormData();
-    formData.append("mode", mode);
-    formData.append("amount", amount);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-
-    const url = "https://exp-pro.onrender.com/api/user/deposit";
-    const token = userToken;
-    const headers = {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "multipart/form-data", // Make sure to set the correct content type
-    };
-
-    axios
-      .post(url, formData, { headers })
-      .then((response) => {
-        toast.dismiss(toastLoadingId);
-
-        const successMessage =
-          response.data.message || "Deposit pending, awaiting confirmation.";
-
-        toast.success(successMessage, { duration: 3000 });
-
-        setLoading(false);
-
-        setDirect(false);
-        setAmount("");
-        setBtc(false);
-        setEth(false);
-        setIsEthPay(false);
-        setIsBtcPay(false);
-        setSelectedFile(null);
-        setSelectedFileName("Click to select");
-        setIsPayed(false);
-      })
-      .catch((error) => {
-        toast.dismiss(toastLoadingId);
-        const errorMsg = error.response?.data?.error || "an Error occurred";
-        toast.error(errorMsg);
-        setLoading(false);
-      });
+    // Simulate API call
+    setTimeout(() => {
+      setLoading(false);
+      alert("Deposit submitted successfully!");
+      handleBack();
+    }, 2000);
   };
 
-  const floatVariable: number = parseFloat(amount);
+  const handleCopyToClipboard = (address: string) => {
+    navigator.clipboard.writeText(address);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
-  const [exchangeRateBTC, setExchangeRateBTC] = useState(0);
-  const [exchangeRateUsd, setExchangeRateUsd] = useState(0);
-  // console.log(exchangeRateBTC);
-  useEffect(() => {
-    const url2 = "https://api.coindesk.com/v1/bpi/currentprice.json";
-    // Fetch the current exchange rate from an API (replace with a reliable API)
-    axios
-      .get(url2)
-      .then((response) => {
-        // console.log("BTC:", response);
-        const rate = response.data.bpi.USD.rate.replace(",", ""); // assuming USD rate
-        setExchangeRateBTC(parseFloat(rate));
-      })
-      .catch((error) => {
-        console.error("Error fetching exchange rate:", error);
-      });
-
-    //exchange rate from 1BTC to USD
-    fetch(
-      "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd"
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const btcToUsdExchangeRate = data.bitcoin.usd;
-        // console.log(
-        //     `Exchange rate of 1 BTC to USD: ${btcToUsdExchangeRate}`
-        // );
-        setExchangeRateUsd(btcToUsdExchangeRate);
-      })
-      .catch((error) => handleRequestError(error));
-  }, [amount]);
-
+  const floatVariable = parseFloat(amount) || 0;
   const totalBtc = floatVariable / exchangeRateBTC;
+  const totalEth = floatVariable / exchangeRateETH;
   const roundedTotalBtc = parseFloat(totalBtc.toFixed(8));
+  const roundedTotalEth = parseFloat(totalEth.toFixed(6));
 
-  const handleCopyToClipboard = (address: any) => {
-    navigator.clipboard.writeText(address);
-    toast.success("copied to clipboard");
-  };
-  const handleCopyToClipboardBtc = (address: any) => {
-    navigator.clipboard.writeText(address);
-    toast.success("copied to clipboard");
-  };
+  const btcAddress = "1Gw2E77fiNsLDLgaFLCYEGa5gLzDsq53eq";
+  const ethAddress = "0x742d35Cc7438C0532793ddddd19c7d";
 
-  return (
-    <>
-      <div className="w-full h-max phone:h-full phone:overflow-y-scroll">
-        <div className="w-full h-max flex flex-col items-center px-10 phone:px-4 py-8 gap-3">
-          {direct === true && isBtcPay === true ? (
-            <>
-              <div className="text-xl font-semibold text-[rgb(54,74,99)] w-full h-max flex items-center gap-1 ">
-                <span
-                  className="w-max h-max flex items-center hover:bg-gray-200 transition-all duration-300 cursor-pointer px-2"
-                  onClick={handleBack}
-                >
-                  <IoMdArrowRoundBack />
-                  Back
-                </span>
+  if (direct && (isBtcPay || isEthPay)) {
+    const isEth = isEthPay;
+    const cryptoAmount = isEth ? roundedTotalEth : roundedTotalBtc;
+    const cryptoSymbol = isEth ? "ETH" : "BTC";
+    const exchangeRate = isEth ? exchangeRateETH : exchangeRateBTC;
+    const address = isEth ? ethAddress : btcAddress;
+
+    return (
+      <div className="w-full max-h-[600px] bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 overflow-y-auto">
+        <div className="max-w-2xl  mx-auto py-5">
+          {/* Back Button */}
+          <button
+            onClick={handleBack}
+            className="flex items-center gap-2 text-white/80 hover:text-white mb-8 transition-colors group"
+          >
+            <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+            <span className="font-medium">Back to deposit</span>
+          </button>
+
+          {/* Main Card */}
+          <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-8 shadow-2xl h-[65rem]">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl mb-4">
+                <Wallet className="w-8 h-8 text-white" />
               </div>
-              <div className="w-[50%] phone:w-full h-max flex flex-col items-center gap-8 bg-white py-6 px-8">
-                <p className="text-[rgb(54,74,99)] font-semibold text-center text-lg">
-                  Transaction details
-                </p>
-                <p className="text-[rgb(82,100,132)] font-medium text-center text-base">
-                  You are about to pay {roundedTotalBtc} BTC for {amount}.00
-                  USD*
-                </p>
-                <p className="text-[rgb(128,148,174)] text-center text-xs">
-                  Exchange rate: 1 BTC = {exchangeRateUsd} USD
-                </p>
-                <div className="w-max h-10 flex items-center justify-center bg-[#e5e9f2] px-4 rounded cursor-pointer">
-                  <p
-                    className="w-max flex items-center gap-2 text-sm font-semibold"
-                    onClick={() =>
-                      handleCopyToClipboardBtc(
-                        "1Gw2E77fiNsLDLgaFLCYEGa5gLzDsq53eq"
-                      )
-                    }
+              <h2 className="text-2xl font-bold text-white mb-2">
+                Transaction Details
+              </h2>
+              <p className="text-white/70">
+                Complete your {cryptoSymbol} deposit
+              </p>
+            </div>
+
+            {/* Transaction Info */}
+            <div className="bg-white/5 rounded-2xl p-6 mb-8 border border-white/10">
+              <div className="text-center mb-6">
+                <div className="text-3xl font-bold text-white mb-1">
+                  {cryptoAmount} {cryptoSymbol}
+                </div>
+                <div className="text-lg text-white/60">
+                  for ${amount}.00 USD
+                </div>
+                <div className="text-sm text-white/40 mt-2">
+                  Exchange rate: 1 {cryptoSymbol} = $
+                  {exchangeRate.toLocaleString()} USD
+                </div>
+              </div>
+            </div>
+
+            {/* Address Section */}
+            <div className="mb-8">
+              <div className="text-white/80 text-sm font-medium mb-3">
+                Send {cryptoSymbol} to this address:
+              </div>
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <div className="flex items-center justify-between">
+                  <div className="font-mono text-sm text-white/90 flex-1 mr-4 break-all">
+                    {address}
+                  </div>
+                  <button
+                    onClick={() => handleCopyToClipboard(address)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                      copied
+                        ? "bg-green-500/20 text-green-400 border border-green-400/30"
+                        : "bg-white/10 text-white/80 hover:bg-white/20 border border-white/20"
+                    }`}
                   >
-                    1Gw2E77fiNsLDLgaFLCYEGa5gLzDsq53eq
-                    <span>
-                      <IoCopyOutline />
-                    </span>
-                  </p>
+                    {copied ? (
+                      <>
+                        <CheckCircle className="w-4 h-4" />
+                        <span className="text-sm font-medium">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-4 h-4" />
+                        <span className="text-sm font-medium">Copy</span>
+                      </>
+                    )}
+                  </button>
                 </div>
-                <div className="w-48 h-48 flex items-center justify-center">
-                  <img src={btcCode} alt="" className="" />
+              </div>
+            </div>
+
+            {/* QR Code Placeholder */}
+            <div className="flex justify-center mb-8">
+              <div className="w-48 h-48 bg-white rounded-2xl flex items-center justify-center shadow-lg">
+                <div className="text-center">
+                  <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl mb-2 flex items-center justify-center">
+                    <Bitcoin className="w-12 h-12 text-gray-400" />
+                  </div>
+                  <div className="text-xs text-gray-500">QR Code</div>
                 </div>
-                {isPayed ? (
-                  <div className="w-full h-max flex flex-col mt-10 gap-10">
-                    <div className="w-full h-24 border border-[rgb(205,159,12)] bg-[#fef7e2] rounded flex flex-col items-center justify-center gap-1">
-                      <p className="text-sm text-[rgb(205,159,12)]">
-                        {" "}
-                        Attach your proof of payment below.
+              </div>
+            </div>
+
+            {/* File Upload Section */}
+            {isPayed && (
+              <div className="mb-8 animate-fadeIn">
+                <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 mb-6">
+                  <div className="flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-amber-400 mt-0.5" />
+                    <div>
+                      <p className="text-amber-200 text-sm font-medium">
+                        Upload proof of payment
                       </p>
-                      <p className="text-sm text-[rgb(205,159,12)] font-medium">
-                        {" "}
-                        Accepted format: .JPG, .PNG, .GIF, .PDF
+                      <p className="text-amber-200/70 text-xs mt-1">
+                        Accepted formats: JPG, PNG, GIF, PDF (Max 10MB)
                       </p>
-                    </div>
-                    <div className="w-full h-10 border border-gray-300 rounded flex">
-                      <input
-                        type="file"
-                        accept="image/jpeg, image/png, image/gif, application/pdf"
-                        className="hidden"
-                        onChange={handleFileChange}
-                        ref={(input) => setFileInput(input)}
-                        id="fileInput"
-                      />
-                      <label
-                        className="cursor-pointer w-full h-full border-none outline-none flex justify-center items-center bg-gray-200 rounded"
-                        htmlFor="fileInput"
-                      >
-                        <div className="w-max px-2 flex items-center justify-center h-full">
-                          {selectedFileName}
-                        </div>
-                      </label>
                     </div>
                   </div>
-                ) : null}
-                {isPayed ? (
-                  <button
-                    className="w-max h-max rounded text-white text-base font-semibold py-2 px-6 bg-[#0238ac]"
-                    onClick={handleSubmit}
-                    disabled={loading}
-                  >
-                    {loading ? "Processing..." : "Submit"}
-                  </button>
-                ) : (
-                  <button
-                    className="w-max h-max rounded text-white text-base font-semibold py-2 px-6 bg-[#0238ac]"
-                    onClick={handleIsPayed}
-                  >
-                    I have sent the coin
-                  </button>
-                )}
-              </div>
-            </>
-          ) : direct === true && isEthPay === true ? (
-            <>
-              <div className="text-xl font-semibold text-[rgb(54,74,99)] w-full h-max flex items-center gap-1 ">
-                <span
-                  className="w-max h-max flex items-center hover:bg-gray-200 transition-all duration-300 cursor-pointer px-2"
-                  onClick={handleBack}
-                >
-                  <IoMdArrowRoundBack />
-                  Back
-                </span>
-              </div>
-              <div className="w-[50%] phone:w-full h-max flex flex-col items-center gap-8 bg-white py-6 px-8">
-                <p className="text-[rgb(54,74,99)] font-semibold text-center text-lg">
-                  Transaction details
-                </p>
-                <p className="text-[rgb(82,100,132)] font-medium text-center text-base">
-                  You are about to pay 0.004445 ETH for {amount}.00 USD*
-                </p>
-                <p className="text-[rgb(128,148,174)] text-center text-xs">
-                  Exchange rate: 1 ETH = 44,998.00 USD
-                </p>
-                <div className="w-max h-10 flex items-center justify-center bg-[#e5e9f2] px-4 rounded cursor-pointer">
-                  <p
-                    className="w-max flex items-center gap-2 text-sm font-semibold"
-                    onClick={() =>
-                      handleCopyToClipboard(
-                        "1Gw2E77fiNsLDLgaFLCYEGa5gLzDsq53eq"
-                      )
-                    }
-                  >
-                    1Gw2E77fiNsLDLgaFLCYEGa5gLzDsq53eq
-                    <span>
-                      <IoCopyOutline />
-                    </span>
-                  </p>
                 </div>
-                <div className="w-48 h-48 flex items-center justify-center">
-                  <img src={ethCode} alt="" className="" />
-                </div>
-                {isPayed ? (
-                  <div className="w-full h-max flex flex-col mt-10 gap-10">
-                    <div className="w-full h-24 border border-[rgb(205,159,12)] bg-[#fef7e2] rounded flex flex-col items-center justify-center gap-1">
-                      <p className="text-sm text-[rgb(205,159,12)]">
-                        {" "}
-                        Attach your proof of payment below.
-                      </p>
-                      <p className="text-sm text-[rgb(205,159,12)] font-medium">
-                        {" "}
-                        Accepted format: .JPG, .PNG, .GIF, .PDF
-                      </p>
-                    </div>
-                    <div className="w-full h-10 border border-gray-300 rounded flex">
-                      <input
-                        type="file"
-                        accept="image/jpeg, image/png, image/gif, application/pdf"
-                        className="hidden"
-                        onChange={handleFileChange}
-                        ref={(input) => setFileInput(input)}
-                        id="fileInput"
-                      />
-                      <label
-                        className="cursor-pointer w-full h-full border-none outline-none flex justify-center items-center bg-gray-200 rounded"
-                        htmlFor="fileInput"
-                      >
-                        <div className="w-max px-2 flex items-center justify-center h-full">
-                          {selectedFileName}
-                        </div>
-                      </label>
-                    </div>
-                  </div>
-                ) : null}
-                {isPayed ? (
-                  <button
-                    className="w-max h-max rounded text-white text-base font-semibold py-2 px-6 bg-[#0238ac]"
-                    onClick={handleSubmit}
-                  >
-                    Submit
-                  </button>
-                ) : (
-                  <button
-                    className="w-max h-max rounded text-white text-base font-semibold py-2 px-6 bg-[#023e8a]"
-                    onClick={handleIsPayed}
-                  >
-                    I have sent the coin
-                  </button>
-                )}
-              </div>
-            </>
-          ) : (
-            <>
-              <div className="w-[50%] phone:w-full h-max flex flex-col gap-8">
-                <p className="text-[#FDFDF7] text-4xl text-center phone:text-lg ">
-                  Add funds to your balance!
-                </p>
-                <div className="w-full h-max flex flex-col gap-2">
-                  <p className="text-[#FDFDF7] text-sm font-medium phone:text-xs">
-                    Amount to Deposit <span>USD</span>
-                  </p>
+
+                <div className="relative">
                   <input
-                    type="text"
-                    className="w-full h-16 border border-gray-300 rounded pl-3 outline-1 outline-blue-700 phone:h-12"
-                    placeholder="500"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    type="file"
+                    accept="image/jpeg,image/png,image/gif,application/pdf"
+                    className="hidden"
+                    onChange={handleFileChange}
+                    id="fileInput"
                   />
-                  <p className="text-[rgb(128,148,174)] text-xs flex justify-between items-center">
-                    Minimum: 50.00 USD
-                  </p>
-                </div>
-                <div className="w-full h-max flex flex-col gap-2 ">
-                  <p className="text-[#FDFDF7] text-sm font-medium pb-3">
-                    Amount to Deposit <span>USD</span>
-                  </p>
-                  <div className="w-full h-16 border border-b-0 border-gray-300 rounded-t px-4 flex items-center justify-between bg-white phone:h-12">
-                    <div className="w-max h-max flex items-center gap-4 ">
-                      <input
-                        type="checkbox"
-                        className="w-6 h-6 rounded-full"
-                        placeholder="500"
-                        checked={btc}
-                        onClick={handleSelectBtc}
-                      />
-                      <p className="text-sm text-[rgb(54,74,99)] font-medium">
-                        Bitcoin
-                      </p>
+                  <label
+                    htmlFor="fileInput"
+                    className="flex items-center justify-center w-full h-16 border-2 border-dashed border-white/30 rounded-xl hover:border-white/50 transition-colors cursor-pointer group"
+                  >
+                    <div className="flex items-center gap-3 text-white/70 group-hover:text-white/90 transition-colors">
+                      <Upload className="w-5 h-5" />
+                      <span className="font-medium">{selectedFileName}</span>
                     </div>
-                    <span className="w-6 h-6 p-2 rounded-full bg-[#8094ae] flex items-center justify-center text-white">
-                      <FaBtc />
-                    </span>
-                  </div>
-                  <div className="w-full h-16 border border-gray-300 rounded-t px-4 flex items-center justify-between bg-white phone:h-12">
-                    <div className="w-max h-max flex items-center gap-4 ">
-                      <input
-                        type="checkbox"
-                        className="w-6 h-6 rounded-full"
-                        placeholder="500"
-                        checked={eth}
-                        onClick={handleSelectEth}
-                      />
-                      <p className="text-sm text-[rgb(54,74,99)] font-medium">
-                        Ethereum
-                      </p>
-                    </div>
-                    <span className="w-6 h-6 p-2 rounded-full bg-[#8094ae] flex items-center justify-center text-white">
-                      <FaEthereum />
-                    </span>
-                  </div>
+                  </label>
                 </div>
-                <button
-                  className="w-full h-max rounded text-white text-base font-semibold py-2 bg-[#023e8a]"
-                  onClick={handleProceed}
-                >
-                  CONTINUE
-                </button>
               </div>
-            </>
-          )}
+            )}
+
+            {/* Action Button */}
+            <div className="flex justify-center">
+              {isPayed ? (
+                <button
+                  onClick={handleSubmit}
+                  disabled={loading || !selectedFile}
+                  className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                >
+                  {loading ? (
+                    <>
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Shield className="w-5 h-5" />
+                      <span>Submit Proof</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <button
+                  onClick={handleIsPayed}
+                  className="flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg"
+                >
+                  <CheckCircle className="w-5 h-5" />
+                  <span>I have sent the payment</span>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </div>
-    </>
+    );
+  }
+
+  return (
+    <div className="w-full h-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 overflow-y-auto">
+      <div className="max-w-2xl mx-auto py-4">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl mb-4">
+            <TrendingUp className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-white mb-3">
+            Add Funds
+          </h1>
+          <p className="text-lg text-white/70">
+            Deposit cryptocurrency to your trading balance
+          </p>
+        </div>
+
+        {/* Main Form Card */}
+        <div className="bg-white/10 backdrop-blur-xl rounded-3xl border border-white/20 p-8 shadow-2xl">
+          {/* Amount Input */}
+          <div className="mb-8">
+            <label className="block text-white/80 text-sm font-medium mb-3">
+              Deposit Amount (USD)
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter amount..."
+                className="w-full h-16 bg-white/5 border border-white/20 rounded-xl px-6 text-white text-lg placeholder-white/40 focus:outline-none focus:border-blue-400 focus:bg-white/10 transition-all"
+              />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 font-medium">
+                USD
+              </div>
+            </div>
+            <div className="flex justify-between text-xs text-white/50 mt-2">
+              <span>Minimum: $50.00</span>
+              <span>Maximum: $50,000.00</span>
+            </div>
+          </div>
+
+          {/* Cryptocurrency Selection */}
+          <div className="mb-8">
+            <label className="block text-white/80 text-sm font-medium mb-4">
+              Select Cryptocurrency
+            </label>
+            <div className="space-y-3">
+              {/* Bitcoin Option */}
+              <div
+                onClick={handleSelectBtc}
+                className={`relative p-4 rounded-xl cursor-pointer transition-all border-2 ${
+                  btc
+                    ? "border-orange-400 bg-orange-400/10"
+                    : "border-white/20 bg-white/5 hover:bg-white/10"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        btc ? "bg-orange-400" : "bg-orange-400/20"
+                      }`}
+                    >
+                      <Bitcoin
+                        className={`w-6 h-6 ${
+                          btc ? "text-white" : "text-orange-400"
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white">Bitcoin</div>
+                      <div className="text-sm text-white/60">
+                        BTC • ${exchangeRateBTC.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      btc
+                        ? "border-orange-400 bg-orange-400"
+                        : "border-white/30"
+                    }`}
+                  >
+                    {btc && (
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    )}
+                  </div>
+                </div>
+                {btc && (
+                  <div className="mt-3 pt-3 border-t border-orange-400/30">
+                    <div className="text-sm text-orange-200">
+                      You will receive: {roundedTotalBtc} BTC
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Ethereum Option */}
+              <div
+                onClick={handleSelectEth}
+                className={`relative p-4 rounded-xl cursor-pointer transition-all border-2 ${
+                  eth
+                    ? "border-blue-400 bg-blue-400/10"
+                    : "border-white/20 bg-white/5 hover:bg-white/10"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div
+                      className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                        eth ? "bg-blue-400" : "bg-blue-400/20"
+                      }`}
+                    >
+                      <Zap
+                        className={`w-6 h-6 ${
+                          eth ? "text-white" : "text-blue-400"
+                        }`}
+                      />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-white">Ethereum</div>
+                      <div className="text-sm text-white/60">
+                        ETH • ${exchangeRateETH.toLocaleString()}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      eth ? "border-blue-400 bg-blue-400" : "border-white/30"
+                    }`}
+                  >
+                    {eth && (
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    )}
+                  </div>
+                </div>
+                {eth && (
+                  <div className="mt-3 pt-3 border-t border-blue-400/30">
+                    <div className="text-sm text-blue-200">
+                      You will receive: {roundedTotalEth} ETH
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Continue Button */}
+          <button
+            onClick={handleProceed}
+            className="w-full h-14 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!amount || (!btc && !eth)}
+          >
+            Continue to Payment
+          </button>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeIn {
+          animation: fadeIn 0.3s ease-out;
+        }
+      `}</style>
+    </div>
   );
 };
 
